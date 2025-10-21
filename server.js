@@ -140,16 +140,19 @@ app.post('/api/command', (req, res) => {
   res.send({ status: "ok"});
 });
 
-io.on('connection', (socket) => {
-  const token = socket.handshake.query.token;
-  if(token !== process.env.PI_AUTH_TOKEN){
-    socket.disconnect();
+io.on("connection", (socket) => {
+  // 예전: const token = socket.handshake.query.token;
+  const token = socket.handshake.auth?.token || socket.handshake.query?.token;
+  const id = socket.handshake.auth?.id || socket.handshake.query?.id;
+
+  if (token !== process.env.PI_AUTH_TOKEN) {
+    console.log("Auth failed for socket", socket.id);
+    socket.disconnect(true);
     return;
   }
-  if(socket.handshake.query.id === 'pi-01') socket.join('pi');
-  socket.on('telemetry', (data) => {
-    io.emit('telemetry_update', data);
-  });
+
+  console.log("Pi connected:", id, socket.id);
+  // ...
 });
 
 const PORT = process.env.PORT || 8080;
