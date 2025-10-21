@@ -1,16 +1,24 @@
 const express = require('express');
+const http = require('http')
 const path = require('path');
 const axios = require('axios');
 const cors = require('cors');
 
+const { Server } = require('socket.io');
+
 const app = express();
+const server = http.createServer(app)
+const io = new Server(server, {
+  cors: { origin: "*" }
+})
 app.use(cors());
 
 // 정적 파일 서빙 (public 같은 별도 폴더 없이, 현재 폴더 기준)
 app.use(express.static(path.join(__dirname)));
 
 // 나이스 급식 API 정보를 설정합니다.
-// *** 아래 'YOUR_API_KEY_HERE' 부분을 발급받은 실제 API 키로 교체해주세요. ***
+// *** 아래 'YOUR_API_KEY_HERE' 부분을 발급받은
+//  실제 API 키로 교체해주세요. ***
 const serviceKey = '3c12807e4d8d42a0ad5b9f266bc209fa'; 
 const baseUrl = 'https://open.neis.go.kr/hub/mealServiceDietInfo';
 const atptOfcdcScCode = 'J10'; // 경기도교육청 코드
@@ -118,7 +126,29 @@ app.get('/api/lunch', async (req, res) => {
     }
 });
 
+// render 연결하기
+app.use(express.json());
+app.post('/api/command', (req, res) => {
+  const {token, command } = req.body;
+  if(token !== process.env.PI_AUTH_TOKEN)
+    return res.status(401).send("Invalid token");
+  io.to('pi').emit('command', command)
+  res.send({ status: "ok"});
+});
+
+io.on('connection', (socket) => {
+  const token = socket.handshake.qery.token;
+  if(token !== process.env.PI_AUTH_TOKEN){
+    socket.disconnect();
+    return;
+  }
+  if(socket.handshake.query.id === 'pi-01') socket.join('pi');
+  socket.on('telemetry', (data) => {
+    io.emit('telemetry_update', data);
+  });
+});
+
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
