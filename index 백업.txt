@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>완성본 레이아웃</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+
+<style>
+  /* 네비바 스타일 */
+  .navbar {
+    font-size: 1.5rem;
+    background: linear-gradient(to right, hsl(246, 100%, 56%), hsl(0, 100%, 58%)) !important;
+    color: white !important;
+  }
+  .navbar-brand { font-size: 2.5rem !important; font-weight: bold !important; color: white !important; }
+  .navbar .nav-link { color: white !important; padding: 0 1.4rem; }
+  .navbar-nav .nav-item { margin-right: 1.2rem; }
+  .navbar .nav-link.active, .navbar .dropdown-toggle { color: white !important; }
+  .navbar .dropdown-menu { background-color: rgba(0, 0, 0, 0.7) !important; color: white !important; }
+  .navbar .dropdown-menu .dropdown-item { color: white !important; }
+  .navbar .dropdown-menu .dropdown-item:hover { background-color: rgba(255, 255, 255, 0.2) !important; color: white !important; }
+  .form-control.me-2 { font-size: 1.2rem; height: 3rem; }
+  .btn.btn-outline-success { font-size: 1.2rem; height: 3rem; padding: 0 1.5rem; }
+  .navbar-toggler { border-color: rgba(255, 255, 255, 0.5); }
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255,255,255,1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+
+  /* 상단 텍스트 영역 */
+  .header-text {
+    margin-top: 2rem;
+    text-align: center;
+  }
+  .header-text h1 {
+    font-size: 3rem;
+    color: black; /* 글자 색 */
+    font-weight: bold;
+    /* 폰트 설정 */
+    font-family: "Nanum Gothic", sans-serif;
+  }
+  .header-text p {
+    font-size: 1.5rem;
+    color: #555;
+  }
+
+  /* 홈 버튼 3x3 중앙 정렬 */
+  .home-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    justify-content: center; /* 그리드 중앙 정렬 */
+    width: max-content; /* 버튼 총합만큼 폭 */
+    position: absolute;
+    top: 57%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .home-btn {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+    width: 160px; /* 버튼 폭 넓힘 */
+    height: 160px; 
+    background-color: #f8f9fa;
+    border-radius: 1rem;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    text-decoration: none; 
+    color: #212529;
+    font-size: 1.5rem;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+  }
+  .home-btn:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.3); }
+
+  .home-btn .bi { font-size: 3rem; margin-bottom: 0.5rem; }
+  .home-btn img { width: 25px; height: 25px; margin-bottom: 0.5rem; object-fit: contain; }
+  
+  /* 갤러리 버튼만 크게 (2x2 차지) */
+  .gallery-btn {
+    grid-area: gallery;
+    grid-column: span 2;
+    grid-row: span 2;
+    min-width: 320px;
+    min-height: 320px;
+  }
+
+  /* 버튼별 색상 */
+  .btn1 { background-color: #e7f1ff; } .btn1 i { color: #0d6efd; }
+  .btn2 { background-color: #fffff5f6; } .btn2 i { color: #fff025; }
+  .btn3 { background-color: #fdecea; } .btn3 i { color: #dc3545; }
+  .btn4 { background-color: #e9f7f0; } .btn4 i { color: #198754; }
+  .btn5 { background-color: #fff4e6; } .btn5 i { color: #946035; }
+  .btn6 { background-color: #f3e8ff; } .btn6 i { color: #6f42c1; }
+</style>
+</head>
+<body>
+  <!-- 네비바 -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">김치볶음밥</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px">
+          <li class="nav-item"><a class="nav-link" href="#">자율 주행</a></li>
+          <li class="nav-item dropdown">
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 상단 텍스트 -->
+  <div class="header-text">
+    <h1>자율주행 안내로봇</h1>
+    <p>도움이 필요해? 그럼 나를 **이용**해봐</p>
+  </div>
+
+  <!-- 홈 UI 버튼 3x3 -->
+  <div class="home-buttons">
+    <a href="#" class="home-btn gallery-btn">
+      <i class="bi bi-map-fill"></i>지도
+    </a>
+    <a href="#" class="home-btn btn1">
+      <i class="bi bi-house-door-fill"></i>홈
+    </a>
+    <a href="/cm" class="home-btn btn2">
+      <i class="bi bi-music-note-beamed"></i>학과소개
+    </a>
+    <a href="/bob" class="home-btn btn3">
+      <i class="bi bi-calendar3"></i>오늘의 점심
+    </a>
+    <a href="/time" class="home-btn btn4">
+      <i class="bi bi-pencil-square"></i>시간표
+    </a>
+    <a href="#" class="home-btn btn5">
+      <i class="bi bi-image-fill"></i>사진
+    </a>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+</html>

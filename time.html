@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TIME - Minionize</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      /* 배경색을 연한 하늘색으로 변경 */
+      background: lightblue;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .gallery {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 600px;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .left-gallery { left: 0; }
+    .right-gallery { right: 0; }
+    .gallery-track {
+      display: flex;
+      flex-direction: column;
+      will-change: transform;
+    }
+    .gallery img {
+      width: 100%; margin: 5px 0;
+      border-radius: 10px;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .logo {
+      margin-top: 30px;
+      font-size: 3.5rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: #333;
+      text-shadow: 3px 3px 0 #fff, 6px 6px 0 #0070BB;
+      position: relative; z-index: 3;
+    }
+
+    nav { margin-top: 40px; z-index: 3; }
+    .menu { padding: 0; }
+    .menu li { list-style: none; margin: 25px 0; text-align: center; }
+    .menu li a {
+      text-decoration: none;
+      font-size: 2rem;
+      padding: 15px 30px;
+      background: #0070BB;
+      color: #ffffff;
+      border: 3px solid #333;
+      border-radius: 12px;
+      display: inline-block;
+      transition: transform 0.25s ease, background 0.25s ease;
+      box-shadow: 3px 3px 0 #333;
+      cursor: pointer;
+    }
+    .menu li a:hover {
+      background: #005599;
+      transform: scale(1.15) rotate(-3deg);
+    }
+
+    #bananaCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+  </style>
+</head>
+<body>
+  <div class="gallery left-gallery">
+    <div class="gallery-track">
+      <img src="/images/mini/minion1.jpg">
+      <img src="/images/mini/minion2.jpg">
+      <img src="/images/mini/minion3.jpg">
+      <img src="/images/mini/minion4.webp">
+      <img src="/images/mini/minion5.jpg">
+      <img src="/images/mini/minion6.jpg">
+      <img src="/images/mini/minion1.jpg">
+      <img src="/images/mini/minion2.jpg">
+      <img src="/images/mini/minion3.jpg">
+      <img src="/images/mini/minion4.webp">
+      <img src="/images/mini/minion5.jpg">
+      <img src="/images/mini/minion6.jpg">
+    </div>
+  </div>
+  <div class="gallery right-gallery">
+    <div class="gallery-track">
+      <img src="/images/mini/minionA.jpg">
+      <img src="/images/mini/minionB.jpg">
+      <img src="/images/mini/minionC.gif">
+      <img src="/images/mini/minionD.jpg">
+      <img src="/images/mini/minionE.webp">
+      <img src="/images/mini/minionF.jpg">
+      <img src="/images/mini/minionA.jpg">
+      <img src="/images/mini/minionB.jpg">
+      <img src="/images/mini/minionC.gif">
+      <img src="/images/mini/minionD.jpg">
+      <img src="/images/mini/minionE.webp">
+      <img src="/images/mini/minionF.jpg">
+    </div>
+  </div>
+
+  <div class="logo">Select Grade</div>
+  <nav>
+    <ul class="menu">
+      <li><a href="/index.html">HOME</a></li>
+      <li><a href="/time/time1.html">1 GRADE</a></li>
+      <li><a href="/time/time2.html">2 GRADE</a></li>
+      <li><a href="/time/time3.html">3 GRADE</a></li>
+    </ul>
+  </nav>
+
+  <canvas id="bananaCanvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('bananaCanvas');
+    const ctx = canvas.getContext('2d');
+    let bananas = [];
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+    class Banana {
+      constructor(x,y){ this.x=x; this.y=y; this.size=Math.random()*40+20;
+        this.speedY=Math.random()*-4-2; this.speedX=(Math.random()-0.5)*6;
+        this.opacity=1; this.rotation=Math.random()*Math.PI*2; }
+      update(){ this.x+=this.speedX; this.y+=this.speedY; this.speedY+=0.15; this.opacity-=0.02; }
+      draw(){ ctx.save(); ctx.globalAlpha=this.opacity; ctx.translate(this.x,this.y); ctx.rotate(this.rotation);
+        // 바나나 색상을 파란색으로 변경
+        ctx.fillStyle="#0070BB"; 
+        ctx.beginPath(); ctx.ellipse(0,0,this.size/2,this.size/4,0,0,Math.PI*2);
+        ctx.fill(); ctx.strokeStyle="#333"; ctx.stroke(); ctx.restore(); }
+    }
+    function animateBananas(){ ctx.clearRect(0,0,canvas.width,canvas.height);
+      bananas.forEach((b,i)=>{ b.update(); b.draw(); if(b.opacity<=0)bananas.splice(i,1); });
+      requestAnimationFrame(animateBananas); }
+    animateBananas();
+
+    document.querySelectorAll('.menu li a').forEach(link=>{
+      link.addEventListener('click',function(e){
+        e.preventDefault();
+        const rect=this.getBoundingClientRect();
+        const x=rect.left+rect.width/2;
+        const y=rect.top+rect.height/2;
+        for(let i=0;i<25;i++) bananas.push(new Banana(x,y));
+        const href=this.getAttribute('href');
+        if(href&&href!=="#") setTimeout(()=>{window.location.href=href;},800);
+      });
+    });
+  </script>
+
+  <script src="/gallery.js"></script>
+</body>
+</html>

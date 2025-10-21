@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>시간표</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+
+<style>
+/* 네비바 스타일 */
+.navbar { font-size: 1.5rem; background: linear-gradient(to right, hsl(246, 100%, 56%), hsl(0, 100%, 58%)) !important; color: white !important; }
+.navbar-brand { font-size: 2.5rem !important; font-weight: bold !important; color: white !important; }
+.navbar .nav-link { color: white !important; padding: 0 1.4rem; }
+.navbar-nav .nav-item { margin-right: 1.2rem; }
+.navbar .nav-link.active, .navbar .dropdown-toggle { color: white !important; }
+.navbar .dropdown-menu { background-color: rgba(0, 0, 0, 0.7) !important; color: white !important; }
+.navbar .dropdown-menu .dropdown-item { color: white !important; }
+.navbar .dropdown-menu .dropdown-item:hover { background-color: rgba(255, 255, 255, 0.2) !important; color: white !important; }
+.form-control.me-2 { font-size: 1.2rem; height: 3rem; }
+.btn.btn-outline-success { font-size: 1.2rem; height: 3rem; padding: 0 1.5rem; }
+.navbar-toggler { border-color: rgba(255, 255, 255, 0.5); }
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255,255,255,1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* 시간표 그리드 */
+.timetable-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  max-width: 900px;
+  margin: 3rem auto;
+}
+
+.timetable-card {
+  background-color: #f8f9fa;
+  border-radius: 1rem;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  text-align: center;
+  padding: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.timetable-card:hover { 
+  transform: translateY(-5px); 
+  box-shadow: 0 12px 25px rgba(0,0,0,0.3); 
+}
+
+.timetable-card img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.timetable-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0;
+}
+
+/* 페이지 맨 아래 홈 버튼 */
+.home-button { text-align: center; margin: 3rem 0; }
+</style>
+</head>
+<body>
+
+  <!-- 네비바 -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">김치볶음밥</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px">
+          <li class="nav-item"><a class="nav-link" href="#">자율 주행</a></li>
+          <li class="nav-item dropdown">
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+<!-- 시간표 그리드 -->
+<div class="timetable-grid">
+  <div class="timetable-card" data-bs-toggle="modal" data-bs-target="#imageModal" data-img="/images/time1_1.png">
+    <img src="/images/time1_1.png" alt="1반">
+    <h3>1반</h3>
+  </div>
+  <div class="timetable-card" data-bs-toggle="modal" data-bs-target="#imageModal" data-img="/images/time1_2.png">
+    <img src="/images/time1_2.png" alt="2반">
+    <h3>2반</h3>
+  </div>
+  <div class="timetable-card" data-bs-toggle="modal" data-bs-target="#imageModal" data-img="/images/time1_3.png">
+    <img src="/images/time1_3.png" alt="3반">
+    <h3>3반</h3>
+  </div>
+  <div class="timetable-card" data-bs-toggle="modal" data-bs-target="#imageModal" data-img="/images/time1_4.png">
+    <img src="/images/time1_4.png" alt="4반">
+    <h3>4반</h3>
+  </div>
+  <div class="timetable-card" data-bs-toggle="modal" data-bs-target="#imageModal" data-img="/images/time1_5.png">
+    <img src="/images/time1_5.png" alt="5반">
+    <h3>5반</h3>
+  </div>
+  <div class="timetable-card" data-bs-toggle="modal" data-bs-target="#imageModal" data-img="/images/time1_6.png">
+    <img src="/images/time1_6.png" alt="6반">
+    <h3>6반</h3>
+  </div>
+  <div class="timetable-card" data-bs-toggle="modal" data-bs-target="#imageModal" data-img="/images/time1_7.png">
+    <img src="/images/time1_7.png" alt="7반">
+    <h3>7반</h3>
+  </div>
+  <div class="timetable-card" data-bs-toggle="modal" data-bs-target="#imageModal" data-img="/images/time1_8.png">
+    <img src="/images/time1_8.png" alt="8반">
+    <h3>8반</h3>
+  </div>
+</div>
+
+<!-- 이미지 모달 -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-body p-0 d-flex justify-content-center align-items-center" style="background-color: #000;">
+        <!-- 확대 적용: width 100%로 모달 꽉 채움, 높이는 최대 90vh 제한 -->
+        <img src="" id="modalImage" style="width: 100%; height: auto; max-height: 90vh;" alt="확대 이미지">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 페이지 맨 아래 홈 버튼 -->
+<div class="home-button">
+  <a href="/" class="btn btn-primary btn-lg">홈으로 가기</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script>
+// 모달 이미지 변경
+const imageModal = document.getElementById('imageModal');
+const modalImage = document.getElementById('modalImage');
+
+imageModal.addEventListener('show.bs.modal', event => {
+  const trigger = event.relatedTarget;
+  const imgSrc = trigger.getAttribute('data-img');
+  modalImage.src = imgSrc;
+});
+</script>
+
+</body>
+</html>

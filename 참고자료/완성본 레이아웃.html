@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!-- saved from url=(0022)http://localhost:8080/ -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>완성본 레이아웃</title>
+<link href="./완성본 레이아웃_files/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- ✅ Bootstrap Icons 추가 -->
+<link href="./완성본 레이아웃_files/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+  /* 네비바 스타일 */
+  .navbar {
+    font-size: 1.5rem;
+    background: linear-gradient(to right, hsl(246, 100%, 56%), hsl(0, 100%, 58%)) !important;
+    color: white !important;
+  }
+  .navbar-brand { font-size: 2.5rem !important; font-weight: bold !important; color: white !important; }
+  .navbar .nav-link { color: white !important; padding: 0 1.4rem; }
+  .navbar-nav .nav-item { margin-right: 1.2rem; }
+  .navbar .nav-link.active, .navbar .dropdown-toggle { color: white !important; }
+  .navbar .dropdown-menu { background-color: rgba(0, 0, 0, 0.7) !important; color: white !important; }
+  .navbar .dropdown-menu .dropdown-item { color: white !important; }
+  .navbar .dropdown-menu .dropdown-item:hover { background-color: rgba(255, 255, 255, 0.2) !important; color: white !important; }
+  .form-control.me-2 { font-size: 1.2rem; height: 3rem; }
+  .btn.btn-outline-success { font-size: 1.2rem; height: 3rem; padding: 0 1.5rem; }
+
+  /* 햄버거 아이콘 색상 */
+  .navbar-toggler { border-color: rgba(255, 255, 255, 0.5); }
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255,255,255,1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+
+  /* 홈 버튼 그리드 */
+  .home-buttons {
+    max-width: 900px;
+    margin: 2rem auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .home-btn {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 150px; background-color: #f8f9fa; border-radius: 1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    text-decoration: none; color: #212529; font-size: 1.1rem; font-weight: 500;
+    transition: transform 0.15s ease, box-shadow 0.15s ease; overflow: hidden;
+  }
+  .home-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.25); }
+
+  /* 아이콘/이미지 크기 */
+  .home-btn .bi { font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .home-btn img { width: 50px; height: 50px; margin-bottom: 0.5rem; object-fit: contain; }
+
+  /* 버튼별 아이콘 색상 — 여기서 버튼마다 자유롭게 변경 */
+  .btn1 { background-color: #e7f1ff; } .btn1 i { color: #0d6efd; }
+  .btn2 { background-color: #f8f9fa; } .btn2 i { color: #6c757d; }
+  .btn3 { background-color: #fdecea; } .btn3 i { color: #dc3545; }
+  .btn4 { background-color: #e9f7f0; } .btn4 i { color: #198754; }
+  .btn5 { background-color: #fff4e6; } .btn5 i { color: #fd7e14; }
+  .btn6 { background-color: #f3e8ff; } .btn6 i { color: #6f42c1; }
+  .btn7 { background-color: #e6fffb; } .btn7 i { color: #20c997; }
+  .btn8 { background-color: #fffbea; } .btn8 i { color: #ffc107; }
+  .btn9 { background-color: #e9ecef; } .btn9 i { color: #343a40; }
+</style>
+</head>
+<body>
+  <!-- 네비바 -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="http://localhost:8080/">Navbar scroll</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px">
+          <li class="nav-item"><a class="nav-link active" href="http://localhost:8080/gaeyo">개요</a></li>
+          <li class="nav-item"><a class="nav-link" href="http://localhost:8080/#">자율 주행</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="http://localhost:8080/#" role="button" data-bs-toggle="dropdown" aria-expanded="false">학과 소개</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="http://localhost:8080/rmagud">금형설계과</a></li>
+              <li><a class="dropdown-item" href="http://localhost:8080/rlrp">정밀기계과</a></li>
+              <li><a class="dropdown-item" href="http://localhost:8080/wkehdghk">자동화설비과</a></li>
+              <li><a class="dropdown-item" href="http://localhost:8080/wjsrl">전기전자과</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="http://localhost:8080/#">more information</a></li>
+            </ul>
+          </li>
+        </ul>
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 홈 UI 버튼 3x3 -->
+  <div class="home-buttons">
+    <a href="http://localhost:8080/#" class="home-btn btn1">
+      <i class="bi bi-image-fill"></i>갤러리
+    </a>
+    <a href="http://localhost:8080/#" class="home-btn btn2">
+      <i class="bi bi-house-door-fill"></i>홈
+    </a>
+    <a href="http://localhost:8080/#" class="home-btn btn3">
+      <i class="bi bi-gear-fill"></i>설정
+    </a>
+    <a href="http://localhost:8080/#" class="home-btn btn4">
+      <i class="bi bi-person-fill"></i>프로필
+    </a>
+    <a href="http://localhost:8080/#" class="home-btn btn5">
+      <i class="bi bi-envelope-fill"></i>메시지
+    </a>
+    <a href="http://localhost:8080/#" class="home-btn btn6">
+      <i class="bi bi-bell-fill"></i>알림
+    </a>
+    <a href="http://localhost:8080/#" class="home-btn btn7">
+      <i class="bi bi-camera-fill"></i>카메라
+    </a>
+    <a href="http://localhost:8080/#" class="home-btn btn8">
+      <i class="bi bi-map-fill"></i>지도
+    </a>
+    <a href="http://localhost:8080/#" class="home-btn btn9">
+      <i class="bi bi-music-note-beamed"></i>음악
+    </a>
+  </div>
+
+<script src="./완성본 레이아웃_files/bootstrap.bundle.min.js.다운로드" crossorigin="anonymous"></script>
+
+
+</body></html>

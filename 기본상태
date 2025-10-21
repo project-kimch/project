@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>완성본 레이아웃</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+
+<style>
+  /* 네비바 스타일 */
+  .navbar {
+    font-size: 1.5rem;
+    background: linear-gradient(to right, hsl(246, 100%, 56%), hsl(0, 100%, 58%)) !important;
+    color: white !important;
+  }
+  .navbar-brand { font-size: 2.5rem !important; font-weight: bold !important; color: white !important; }
+  .navbar .nav-link { color: white !important; padding: 0 1.4rem; }
+  .navbar-nav .nav-item { margin-right: 1.2rem; }
+  .navbar .nav-link.active, .navbar .dropdown-toggle { color: white !important; }
+  .navbar .dropdown-menu { background-color: rgba(0, 0, 0, 0.7) !important; color: white !important; }
+  .navbar .dropdown-menu .dropdown-item { color: white !important; }
+  .navbar .dropdown-menu .dropdown-item:hover { background-color: rgba(255, 255, 255, 0.2) !important; color: white !important; }
+  .form-control.me-2 { font-size: 1.2rem; height: 3rem; }
+  .btn.btn-outline-success { font-size: 1.2rem; height: 3rem; padding: 0 1.5rem; }
+  .navbar-toggler { border-color: rgba(255, 255, 255, 0.5); }
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255,255,255,1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+</style>
+</head>
+<body>
+  <!-- 네비바 -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/"> 김치볶음밥  </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px">
+          <li class="nav-item"><a class="nav-link" href="#">자율 주행</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">학과 소개</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/rmagud">금형설계과</a></li>
+              <li><a class="dropdown-item" href="/rlrp">정밀기계과</a></li>
+              <li><a class="dropdown-item" href="/wkehdghk">자동화설비과</a></li>
+              <li><a class="dropdown-item" href="/wjsrl">전기전자과</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="#">more information</a></li>
+            </ul>
+          </li>
+        </ul>
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" />
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>사진 업로드 및 갤러리</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  /* 기본 body 스타일은 유지하고 배경 효과는 별도 요소에 적용 */
+  body {
+    background-color: #f0f2f5;
+    font-family: 'Nanum Gothic', sans-serif;
+    overflow-x: hidden;
+    position: relative;
+  }
+  
+  /* 배경 이미지 효과를 위한 별도의 요소 */
+  #background-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background-size: cover;
+    background-position: center;
+    filter: blur(5px); /* 배경 이미지에 흐림 효과 적용 */
+    transform: scale(1.05); /* 흐림 효과로 인한 여백을 채우기 위해 확대 */
+    transition: background-image 1s ease-in-out; /* 배경 이미지 전환 효과 */
+  }
+
+  /* 배경에 그라데이션 오버레이를 위한 스타일 */
+  body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: -1;
+  }
+
+  /* 네비바 스타일 */
+  .navbar {
+    font-size: 1.5rem;
+    background: linear-gradient(to right, hsl(246, 100%, 56%), hsl(0, 100%, 58%)) !important;
+    color: white !important;
+    position: relative;
+    z-index: 1000;
+  }
+  .navbar-brand { font-size: 2.5rem !important; font-weight: bold !important; color: white !important; }
+  .navbar .nav-link { color: white !important; padding: 0 1.4rem; }
+  .navbar-nav .nav-item { margin-right: 1.2rem; }
+  .navbar .nav-link.active, .navbar .dropdown-toggle { color: white !important; }
+  .navbar .dropdown-menu { background-color: rgba(0, 0, 0, 0.7) !important; color: white !important; }
+  .navbar .dropdown-menu .dropdown-item:hover { background-color: rgba(255, 255, 255, 0.2) !important; color: white !important; }
+  .form-control.me-2 { font-size: 1.2rem; height: 3rem; }
+  .btn.btn-outline-success { font-size: 1.2rem; height: 3rem; padding: 0 1.5rem; }
+  .navbar-toggler { border-color: rgba(255, 255, 255, 0.5); }
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255,255,255,1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+
+  /* 사진 업로드 페이지 스타일 */
+  .upload-container {
+    max-width: 800px;
+    margin: 3rem auto;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 3.5rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    position: relative;
+    z-index: 10;
+  }
+
+  .upload-container h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #212529;
+    margin-bottom: 1.5rem;
+  }
+
+  .upload-container .text-muted {
+      font-size: 1.1rem;
+      color: #6c757d !important;
+      margin-bottom: 2.5rem;
+  }
+
+  .upload-area {
+    border: 3px dashed #aed6f1;
+    border-radius: 15px;
+    padding: 3.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 2.5rem;
+    background-color: #f8fafd;
+  }
+
+  .upload-area:hover {
+    border-color: #0d6efd;
+    background-color: #e3f2fd;
+  }
+
+  .upload-area i {
+    font-size: 5rem;
+    color: #4285f4;
+    margin-bottom: 1.2rem;
+  }
+
+  .upload-area p {
+    font-size: 1.3rem;
+    color: #34495e;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .file-input {
+    display: none;
+  }
+  
+  .preview-area {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .image-preview {
+    width: 160px;
+    height: 160px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  .image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+  }
+
+  .image-preview .delete-preview-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: rgba(220, 53, 69, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .image-preview:hover .delete-preview-btn {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  /* 글쓰기 영역 스타일 */
+  .post-form {
+      margin-top: 3rem;
+      text-align: left;
+      border-top: 1px solid #e0e0e0;
+      padding-top: 2.5rem;
+  }
+
+  .post-form label {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #343a40;
+      margin-bottom: 0.8rem;
+      display: block;
+  }
+
+  .post-form .form-control {
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      border-radius: 10px;
+      border: 1px solid #ced4da;
+      font-size: 1.1rem;
+  }
+
+  .post-form textarea.form-control {
+      min-height: 150px;
+      resize: vertical;
+  }
+  
+  /* 고유번호 입력 필드 */
+  #pinInput {
+      width: 150px;
+      text-align: center;
+      letter-spacing: 5px;
+      font-weight: bold;
+  }
+
+  .upload-btn {
+    margin-top: 2rem;
+    padding: 1rem 3rem;
+    font-size: 1.4rem;
+    font-weight: bold;
+    border-radius: 50px;
+    background-color: #28a745;
+    border-color: #28a745;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+  }
+
+  .upload-btn:hover {
+    background-color: #218838;
+    border-color: #218838;
+    transform: translateY(-3px);
+  }
+
+  /* 모달 스타일 개선 */
+  .modal-content {
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+  }
+  .modal-header {
+      background-color: #0d6efd;
+      color: white;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      padding: 1.5rem;
+  }
+  .modal-title {
+      font-weight: bold;
+      font-size: 1.8rem;
+  }
+  .modal-body {
+      padding: 2rem;
+      font-size: 1.1rem;
+      color: #343a40;
+  }
+  .modal-footer {
+      padding: 1.5rem;
+  }
+  .modal-footer .btn-primary {
+      background-color: #0d6efd;
+      border-color: #0d6efd;
+      border-radius: 8px;
+  }
+  .modal-footer .btn-secondary {
+      border-radius: 8px;
+  }
+  .modal-footer .btn-danger {
+      background-color: #dc3545;
+      border-color: #dc3545;
+      border-radius: 8px;
+  }
+  
+  /* 홈 버튼 스타일 */
+  .home-btn {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 1000;
+    background-color: #0d6efd;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .home-btn:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+  }
+  
+  /* 갤러리 버튼 스타일 */
+  .gallery-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    background-color: #0d6efd;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .gallery-btn:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+  }
+</style>
+</head>
+<body onload="startBackgroundSlideshow()">
+<div id="background-image"></div>
+
+<!-- 공용 모달: 성공 -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="successModalLabel">성공!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="successModalBody">
+        작업이 성공적으로 완료되었습니다.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 공용 모달: 경고 -->
+<div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="warningModalLabel">알림</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="warningModalBody">
+        알림 메시지입니다.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">김치볶음밥</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px">
+          <li class="nav-item"><a class="nav-link" href="#">자동 운송 수레</a></li>
+          <li class="nav-item dropdown">
+          </li>
+        </ul>
+      </div>
+    </div>
+</nav>
+
+<div class="container upload-container">
+    <h1>사진 업로드</h1>
+    <p class="text-muted">아름다운 순간들을 공유해주세요!</p>
+
+    <div class="upload-area" id="uploadArea">
+      <input type="file" id="fileInput" class="file-input" accept="image/*" multiple>
+      <i class="bi bi-cloud-arrow-up"></i>
+      <p>여기에 파일을 드래그앤드롭하거나 클릭해서 업로드하세요.</p>
+    </div>
+
+    <div class="preview-area" id="previewArea">
+    </div>
+
+    <div class="post-form">
+        <div class="mb-4">
+            <label for="postTitle" class="form-label">게시물 제목</label>
+            <input type="text" class="form-control" id="postTitle" placeholder="제목을 입력하세요">
+        </div>
+        <div class="mb-4">
+            <label for="postContent" class="form-label">내용</label>
+            <textarea class="form-control" id="postContent" rows="6" placeholder="사진에 대한 설명을 입력하세요"></textarea>
+        </div>
+        <div class="mb-4 text-center">
+            <label for="pinInput" class="form-label">삭제용 고유번호 (4자리 숫자)</label>
+            <input type="number" class="form-control mx-auto" id="pinInput" placeholder="숫자 4자리" maxlength="4">
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-primary upload-btn">게시물 업로드</button>
+</div>
+
+<!-- 홈 버튼 -->
+<a href="/" class="home-btn">
+  <i class="bi bi-house-door-fill"></i> 홈으로
+</a>
+
+<!-- 갤러리 버튼 -->
+<a href="pho_view.html" class="gallery-btn">
+  <i class="bi bi-images"></i> 갤러리 보기
+</a>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script>
+  const uploadArea = document.getElementById('uploadArea');
+  const fileInput = document.getElementById('fileInput');
+  const previewArea = document.getElementById('previewArea');
+  const uploadButton = document.querySelector('.upload-btn');
+  const postTitleInput = document.getElementById('postTitle');
+  const postContentInput = document.getElementById('postContent');
+  const pinInput = document.getElementById('pinInput');
+
+  let uploadedFiles = [];
+  let currentImageIndex = 0;
+  let backgroundInterval;
+
+  // 배경 슬라이드쇼 시작
+  function startBackgroundSlideshow() {
+    const posts = JSON.parse(localStorage.getItem('photo_posts')) || [];
+    const images = posts.map(post => post.image);
+    const backgroundImageElement = document.getElementById('background-image');
+
+    // 업로드된 사진이 없을 경우 기본 배경 설정
+    if (images.length === 0) {
+      backgroundImageElement.style.backgroundImage = `url('https://picsum.photos/id/1020/1920/1080')`;
+      return;
+    }
+
+    // 슬라이드쇼를 시작하기 전에 먼저 최신 이미지를 표시
+    backgroundImageElement.style.backgroundImage = `url('${images[0]}')`;
+
+    // 기존 인터벌이 있으면 제거
+    if (backgroundInterval) {
+        clearInterval(backgroundInterval);
+    }
+    
+    // 5초마다 배경 이미지 변경
+    backgroundInterval = setInterval(() => {
+      currentImageIndex = (currentImageIndex + 1) % images.length;
+      backgroundImageElement.style.backgroundImage = `url('${images[currentImageIndex]}')`;
+    }, 5000);
+  }
+
+  // 파일 미리보기 로직
+  uploadArea.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', (event) => handleFiles(event.target.files));
+  uploadArea.addEventListener('dragover', (event) => {
+    event.preventDefault();
+    uploadArea.style.borderColor = '#0d6efd';
+    uploadArea.style.backgroundColor = '#e3f2fd';
+  });
+  uploadArea.addEventListener('dragleave', (event) => {
+    event.preventDefault();
+    uploadArea.style.borderColor = '#aed6f1';
+    uploadArea.style.backgroundColor = '#f8fafd';
+  });
+  uploadArea.addEventListener('drop', (event) => {
+    event.preventDefault();
+    uploadArea.style.borderColor = '#aed6f1';
+    uploadArea.style.backgroundColor = '#f8fafd';
+    handleFiles(event.dataTransfer.files);
+  });
+
+  function handleFiles(files) {
+    if (files.length === 0) return;
+    previewArea.innerHTML = '';
+    uploadedFiles = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.type.startsWith('image/')) {
+        uploadedFiles.push(file);
+        displayImagePreview(file);
+      } else {
+        showWarningModal('이미지 파일만 업로드할 수 있습니다.');
+      }
+    }
+  }
+
+  function displayImagePreview(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const previewDiv = document.createElement('div');
+      previewDiv.classList.add('image-preview');
+
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.alt = file.name;
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.classList.add('delete-preview-btn');
+      deleteBtn.innerHTML = '&times;';
+      deleteBtn.title = '삭제';
+      deleteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        previewDiv.remove();
+        uploadedFiles = uploadedFiles.filter(f => f !== file);
+      });
+
+      previewDiv.appendChild(img);
+      previewDiv.appendChild(deleteBtn);
+      previewArea.appendChild(previewDiv);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // 게시물 업로드 및 localStorage에 저장
+  uploadButton.addEventListener('click', () => {
+    const postTitle = postTitleInput.value.trim();
+    const postContent = postContentInput.value.trim();
+    const pin = pinInput.value.trim();
+
+    if (uploadedFiles.length === 0) {
+      showWarningModal('업로드할 사진을 선택해주세요.');
+      return;
+    }
+    if (postTitle === '' || postContent === '') {
+      showWarningModal('제목과 내용을 모두 입력해주세요.');
+      return;
+    }
+    if (pin.length !== 4 || isNaN(pin)) {
+        showWarningModal('삭제용 고유번호는 4자리 숫자로 입력해주세요.');
+        return;
+    }
+
+    // 파일 데이터를 Data URL로 변환하여 저장
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const post = {
+            id: Date.now(), // 고유 ID
+            title: postTitle,
+            content: postContent,
+            pin: pin,
+            image: e.target.result // Base64 이미지 데이터
+        };
+
+        const posts = JSON.parse(localStorage.getItem('photo_posts')) || [];
+        posts.unshift(post); // 새 게시물을 배열 맨 앞에 추가
+        localStorage.setItem('photo_posts', JSON.stringify(posts));
+
+        // 업로드 후 입력 필드 초기화
+        uploadedFiles = [];
+        previewArea.innerHTML = '';
+        postTitleInput.value = '';
+        postContentInput.value = '';
+        pinInput.value = '';
+        
+        startBackgroundSlideshow(); // 새로운 배경으로 업데이트
+        showSuccessModal('게시물이 성공적으로 업로드되었습니다!');
+    };
+    reader.readAsDataURL(uploadedFiles[0]); // 첫 번째 파일만 처리
+  });
+
+  // 모달 함수
+  function showSuccessModal(message) {
+    const modalBody = document.getElementById('successModalBody');
+    modalBody.innerText = message;
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    successModal.show();
+  }
+
+  function showWarningModal(message) {
+    const modalBody = document.getElementById('warningModalBody');
+    modalBody.innerText = message;
+    const warningModal = new bootstrap.Modal(document.getElementById('warningModal'));
+    warningModal.show();
+  }
+</script>
+</body>
+</html>

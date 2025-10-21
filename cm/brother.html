@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>금형설계과 소개</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+<style>
+  /* 네비바 스타일 */
+  .navbar {
+    font-size: 1.5rem;
+    background: linear-gradient(to right, hsl(246, 100%, 56%), hsl(0, 100%, 58%)) !important;
+    color: white !important;
+  }
+  .navbar-brand { font-size: 2.5rem !important; font-weight: bold !important; color: white !important; }
+  .navbar .nav-link { color: white !important; padding: 0 1.4rem; }
+  .navbar-nav .nav-item { margin-right: 1.2rem; }
+  .navbar .nav-link.active, .navbar .dropdown-toggle { color: white !important; }
+  .navbar .dropdown-menu { background-color: rgba(0, 0, 0, 0.7) !important; color: white !important; }
+  .navbar .dropdown-menu .dropdown-item { color: white !important; }
+  .navbar .dropdown-menu .dropdown-item:hover { background-color: rgba(255, 255, 255, 0.2) !important; color: white !important; }
+  .form-control.me-2 { font-size: 1.2rem; height: 3rem; }
+  .btn.btn-outline-success { font-size: 1.2rem; height: 3rem; padding: 0 1.5rem; }
+  .navbar-toggler { border-color: rgba(255, 255, 255, 0.5); }
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255,255,255,1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+
+    /* 상단 텍스트 영역 */
+    .header-text {
+      margin-top: 5rem;
+      text-align: center;
+    }
+    .header-text h1 {
+      font-size: 6rem;
+      color: black; /* 글자 색 */
+      font-weight: bold;
+      /* 폰트 설정 */
+      font-family: "Nanum Gothic", sans-serif;
+    }
+    .header-text p {
+      font-size: 2rem;
+      color: #555;
+    }  
+
+  /* 상자 스타일 */
+  .content-container {
+    max-width: 900px;
+    margin: 2rem auto 4rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .small-box {
+    background: rgba(192, 192, 192, 0.39);
+    padding: 2.5rem;
+    border-radius: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    overflow-y: auto;
+  }
+  .small-box h1 { font-size: 2rem; margin-bottom: 1rem; }
+  .small-box h2 { 
+    font-size: 4rem; 
+    margin-bottom: 1rem; 
+    font-weight: 900; /* 글씨를 굵게 */
+  }
+  .small-box h3 { 
+    font-size: 2rem; 
+    margin-bottom: 1rem; 
+  }
+  /* 설명글 전용 스타일 */
+.description-text {
+  font-size: 1.5rem; /* 글씨 크기 키움 */
+  line-height: 1.8;  /* 줄 간격 넉넉하게 */
+  font-weight: 900;  /* 약간 굵게 */
+  margin-top: 0.5rem;
+}
+
+  /* 이미지 박스 */
+  .image-boxes {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  .image-boxes img {
+    width: 32%;
+    border-radius: 1rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    object-fit: cover;
+  }
+
+  /* 홈 버튼 */
+  .home-button-container { max-width: 1700px; margin: 2rem auto; text-align: center; }
+  .home-button-container a.btn {
+    font-size: 1.25rem;
+    padding: 0.8rem 2rem;
+  }
+</style>
+</head>
+<body>
+  <!-- 네비바 -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">김치볶음밥</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px">
+          <li class="nav-item"><a class="nav-link" href="#">자율 주행</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+    <!-- 상단 텍스트 -->
+    <div class="header-text">
+      <h1>기계융합설비과</h1>
+    </div>
+
+  <!-- 금형설계과 소개 상자 -->
+  <main class="content-container">
+    <div class="small-box">
+      <h2>학과소개</h2>
+      <p class="description-text">
+        금형설계과에서는 글로벌 지식 정보화 사회에 대비하여 직업기초능력과 외국어 능력을 기반으로 유망분야의 산업체 종사자에 의한 직무분석 결과가 반영된 실무형 과제를 프로젝트 수업을 통해 수행함으로써 현장의 기술변화에 능동적으로 대처할 수 있는 금형설계와 제작 및 전반적인 기계 부품 생산분야의 수요 맞춤형인력을 육성하고 있습니다.
+      </p>
+    </div>
+
+    <div class="small-box">
+      <h2>교육목표</h2>
+      <p class="description-text">
+        - 금형의 기본원리를 학습하며 범용공작기계, 수치제어선반, 머시닝센터, CAD/CAM, 기계요소설계 등의 기본 설계와 운용실습을 통하여 금형분야 실무 능력인 육성<br>
+        - 기계 분야의 설계 및 제작과 프레스 금형 및 사출 금형을 설계하고 제작할 수 있는 능력을 갖춘 다기능 기술인 양성
+      </p>
+    </div>
+
+    <div class="small-box">
+      <h2>교육내용</h2>
+      <p class="description-text">
+        1학년: 기초제도, 기계일반, 전기전자기초, 기계기초, 공작<br>
+        2학년: 선반가공, 밀링가공, 기계제도, 컴퓨터활용, 생산기계구조와 기능<br>
+        3학년: 프레스금형설계, 프레스금형제작, 사출금형설계, 사출금형제작, 기계요소설계, 기계소프트웨어개발, 기계시스템설계
+      </p>
+    </div>
+
+    <div class="small-box">
+      <h2>학과 특색 이미지</h2>
+      <div class="image-boxes">
+        <img src="https://via.placeholder.com/400x250?text=금형+동아리" alt="금형 동아리 이미지">
+        <img src="https://via.placeholder.com/400x250?text=기계설계+CAD+동아리" alt="기계설계/CAD 동아리 이미지">
+        <img src="https://via.placeholder.com/400x250?text=3D+프린팅+동아리" alt="3D 프린팅 동아리 이미지">
+      </div>
+    </div>
+  </main>
+
+  <div class="home-button-container">
+    <a href="/" class="btn btn-primary">홈으로 가기</a>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

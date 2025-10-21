@@ -1,0 +1,9 @@
+node.js 설치. ( C에 설치해야 작동함 )
+visual studio code 들어가서 작업폴더 여기로 지정.
+위의 메뉴에서 터미널 -> 새 터미널.
+터미널 창 안에서 npm init 입력.
+express 설치해야됨
+npm install express
+
+그 다음 실행
+node server.js

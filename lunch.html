@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>오늘의 점심</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --primary-color: hsl(246, 100%, 56%);
+        --secondary-color: hsl(0, 100%, 58%);
+        --gradient-color: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        --shadow: rgba(0, 0, 0, 0.1);
+        --dark-text: #212529;
+        --light-text: #6c757d;
+        --border-radius: 12px;
+    }
+    body {
+        font-family: 'Nanum Gothic', sans-serif;
+        background-color: hsl(192, 100%, 96%);
+        color: var(--dark-text);
+        margin: 0;
+        padding: 0;
+    }
+    .navbar {
+        font-size: 1.5rem;
+        background: var(--gradient-color) !important;
+        color: white !important;
+    }
+    .navbar-brand { font-size: 2.5rem !important; font-weight: bold !important; color: white !important; }
+    .main-container {
+        padding: 3rem 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .main-container h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        color: var(--dark-text);
+        margin-bottom: 0.5rem;
+    }
+    .main-container .date-text {
+        font-size: 1.5rem;
+        color: var(--light-text);
+        margin-bottom: 2rem;
+    }
+    .date-selector-container {
+        margin-bottom: 2rem;
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .date-selector-container input[type="date"] {
+        font-size: 1.5rem;
+        padding: 1rem;
+        height: auto;
+    }
+    .date-selector-container button {
+        font-size: 1.5rem;
+        padding: 1rem 2rem;
+    }
+    .lunch-tray-container {
+        display: grid;
+        /* 모든 아이템을 동일한 크기로 배치하기 위해 grid-template-columns와 grid-template-rows를 조정 */
+        grid-template-areas:
+            "rice main-dish side-dish-1"
+            "soup side-dish-2 dessert";
+        grid-template-columns: repeat(3, 1fr); /* 3개의 동일한 너비의 컬럼 */
+        grid-template-rows: repeat(2, 1fr); /* 2개의 동일한 높이의 로우 */
+        gap: 20px;
+        width: 100%;
+        max-width: 1200px;
+        height: auto;
+        padding: 40px;
+        background-color: #e0e0e0;
+        border-radius: 30px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+    .tray-item {
+        background-color: white;
+        border-radius: 25px; /* 모든 아이템을 네모로 유지 */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        min-height: 150px; /* 최소 높이를 유지하여 내용이 없어도 형태 유지 */
+        padding: 15px;
+        transition: transform 0.2s ease;
+    }
+    .tray-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    /* .tray-item.circle 클래스 제거 - 모든 아이템이 동일한 스타일을 갖도록 */
+    .tray-item h4 {
+        font-size: 1.2rem;
+        color: var(--light-text);
+        margin-bottom: 5px;
+    }
+    .tray-item p {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: var(--dark-text);
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        display: block;
+    }
+    /* Grid Areas */
+    .tray-item.rice { grid-area: rice; }
+    .tray-item.soup { grid-area: soup; }
+    .tray-item.main-dish { grid-area: main-dish; }
+    .tray-item.side-dish-1 { grid-area: side-dish-1; }
+    .tray-item.side-dish-2 { grid-area: side-dish-2; }
+    .tray-item.dessert { grid-area: dessert; }
+    
+    .loading-container {
+        display: none;
+        margin-top: 3rem;
+        text-align: center;
+    }
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+    }
+    .error-message {
+        display: none;
+        margin-top: 3rem;
+        font-size: 1.2rem;
+        color: #dc3545;
+    }
+    .home-button-container {
+        margin-top: 2rem;
+    }
+    .home-button {
+        font-size: 1.2rem;
+        padding: 0.75rem 2rem;
+        border-radius: 10px;
+    }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">급식 정보</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarScroll">
+            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">자동 운송 수레</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        바로가기
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="pho.html">사진 업로드</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="pho_view.html">갤러리 보기</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container main-container">
+    <h1>오늘의 점심</h1>
+    <p id="currentDate" class="date-text"></p>
+    
+    <div class="date-selector-container">
+        <input type="date" id="datePicker" class="form-control" style="max-width: 200px;">
+        <button id="fetchButton" class="btn btn-primary">조회하기</button>
+    </div>
+
+    <div id="lunchTray" class="lunch-tray-container" style="display: none;">
+        <div class="tray-item rice"> <h4>밥</h4>
+            <p id="rice"></p>
+        </div>
+        <div class="tray-item soup"> <h4>국/찌개</h4>
+            <p id="soup"></p>
+        </div>
+        <div class="tray-item main-dish">
+            <h4>메인 반찬</h4>
+            <p id="mainDish"></p>
+        </div>
+        <div class="tray-item side-dish-1">
+            <h4>반찬</h4>
+            <p id="kimchi"></p>
+        </div>
+        <div class="tray-item side-dish-2">
+            <h4>반찬</h4>
+            <p id="sideDish"></p>
+        </div>
+        <div class="tray-item dessert">
+            <h4>기타/디저트</h4>
+            <p id="dessert"></p>
+        </div>
+    </div>
+
+    <div id="loading" class="loading-container">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">평택마이스터고등학교 급식 정보를 가져오는 중입니다...</p>
+    </div>
+
+    <p id="errorMessage" class="error-message"></p>
+    
+    <div class="home-button-container">
+        <a href="index.html" class="btn btn-primary home-button">홈으로</a>
+    </div>
+</div>
+
+<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="infoModalLabel">알림</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="infoModalBody">
+        메시지 내용.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script>
+    const currentDateElement = document.getElementById('currentDate');
+    const lunchTray = document.getElementById('lunchTray');
+    const loadingElement = document.getElementById('loading');
+    const errorMessageElement = document.getElementById('errorMessage');
+    const datePicker = document.getElementById('datePicker');
+    const fetchButton = document.getElementById('fetchButton');
+
+    const riceElement = document.getElementById('rice');
+    const soupElement = document.getElementById('soup');
+    const mainDishElement = document.getElementById('mainDish');
+    const kimchiElement = document.getElementById('kimchi');
+    const sideDishElement = document.getElementById('sideDish');
+    const dessertElement = document.getElementById('dessert');
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        // 페이지 로드 시 오늘 날짜로 설정
+        const today = new Date();
+        const formattedDate = `${today.getMonth() + 1}월 ${today.getDate()}일 (${getDayOfWeek(today.getDay())})`;
+        currentDateElement.innerText = formattedDate;
+
+        const todayString = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+        datePicker.value = todayString;
+
+        // 초기 급식 정보를 가져옵니다.
+        fetchLunchMenu(todayString.replace(/-/g, ''));
+    });
+    
+    // 조회하기 버튼 클릭 이벤트
+    fetchButton.addEventListener('click', () => {
+        const selectedDate = datePicker.value.replace(/-/g, '');
+        fetchLunchMenu(selectedDate);
+    });
+
+    function getDayOfWeek(dayIndex) {
+        const days = ['일', '월', '화', '수', '목', '금', '토'];
+        return days[dayIndex];
+    }
+
+    async function fetchLunchMenu(date) {
+        loadingElement.style.display = 'block';
+        lunchTray.style.display = 'none';
+        errorMessageElement.style.display = 'none';
+        
+        try {
+            // 선택된 날짜로 API를 호출합니다.
+            const response = await fetch(`http://localhost:8080/api/lunch?date=${date}`);
+            
+            // 네트워크 응답이 올바르지 않은 경우 (200 OK가 아닌 경우)
+            if (!response.ok) {
+                // 서버에서 보낸 오류 메시지를 받아서 표시합니다.
+                const errorData = await response.json();
+                throw new Error(errorData.error || `네트워크 응답이 올바르지 않습니다: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            
+            // 받은 데이터를 콘솔에 출력하여 확인합니다.
+            console.log("API로부터 받은 데이터:", data);
+            
+            const menu = data.menu;
+
+            if (menu && menu.length > 0) {
+                // 급식 정보가 있을 경우 UI 업데이트
+                riceElement.innerText = menu[0] || '정보 없음';
+                soupElement.innerText = menu[1] || '정보 없음';
+                mainDishElement.innerText = menu[2] || '정보 없음';
+                kimchiElement.innerText = menu[3] || '정보 없음';
+                sideDishElement.innerText = menu[4] || '정보 없음';
+                dessertElement.innerText = menu[5] || '정보 없음';
+
+                lunchTray.style.display = 'grid';
+            } else {
+                // 급식 정보가 없을 경우 에러 메시지 표시
+                errorMessageElement.innerText = '선택하신 날짜의 급식 정보가 없어요. (주말/공휴일 또는 정보 누락)';
+                errorMessageElement.style.display = 'block';
+            }
+        } catch (error) {
+            console.error("급식 정보 가져오기 실패:", error);
+            errorMessageElement.innerText = `급식 정보를 가져오는 중 오류가 발생했습니다: ${error.message}`;
+            errorMessageElement.style.display = 'block';
+        } finally {
+            loadingElement.style.display = 'none';
+        }
+    }
+
+    function showInfoModal(message) {
+        const modalBody = document.getElementById('infoModalBody');
+        modalBody.innerText = message;
+        const infoModal = new bootstrap.Modal(document.getElementById('infoModal'));
+        infoModal.show();
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "project-web",
+  "version": "1.0.0",
+  "description": "server.js",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "server.js",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.11.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "server.js"
+  },
+  "keywords": [
+    "server.js"
+  ],
+  "devDependencies": {}
+}
