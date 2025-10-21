@@ -16,6 +16,7 @@
             font-family: 'Inter', sans-serif;
             background-color: #f3f4f6;
         }
+        .control-btn:active { transform: scale(0.9); }
 
         .card {
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
@@ -80,10 +81,10 @@
                         <svg class="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/></svg>
                         <h3 class="font-semibold text-xl">전공 소개</h3>
                     </div>
-                      <div data-page="bob" class="card bg-gradient-to-br from-yellow-500 to-orange-600 p-6 rounded-2xl shadow-lg text-center text-white cursor-pointer">
+                      <div data-page="cart" class="card bg-gradient-to-br from-yellow-500 to-orange-600 p-6 rounded-2xl shadow-lg text-center text-white cursor-pointer w-[325px]">
                         <!-- Lunch Icon SVG -->
                         <svg class="w-26 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 24 24"><path d="M21 5H3c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zM8 12c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm13 5H3V7h18v10z"/></svg>
-                        <h3 class="font-semibold text-xl">카트 설정</h3>
+                        <h3 class="font-semibold text-xl">카트 설정</h3> 
                     </div>
                 </div>
             </div>
@@ -148,26 +149,88 @@
                 </div>
             </div>
 
-            <!-- Image Modal -->
-            <div id="image-modal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-75 flex items-center justify-center p-4">
-                <!-- 모달 콘텐츠: 이미지와 버튼을 포함하며 화면 크기에 맞춰 크기 조절 -->
-                <div class="relative bg-white rounded-lg shadow-xl p-4 w-[90vw] max-w-[90vw] h-auto max-h-[90vh] flex flex-col items-center">
-                    <!-- 닫기(X) 버튼 -->
-                    <button id="close-modal-x" class="absolute top-2 right-2 text-gray-500 text-3xl font-bold p-1 leading-none">&times;</button>
-                    <!-- 이미지 컨테이너: 넘치는 부분을 스크롤로 처리 -->
-                    <div class="overflow-y-auto w-full flex-1 flex items-center justify-center">
-                        <img id="modal-image" src="" alt="확대 이미지" class="max-w-full max-h-full object-contain">
-                    </div>
-                    <!-- 뒤로가기 버튼 -->
-                    <button id="close-modal-btn" class="mt-4 w-full px-6 py-2 bg-blue-600 text-white rounded-xl shadow-lg hover:bg-blue-700 transition-colors">뒤로가기</button>
+            <!-- Cart Page -->
+            <div id="page-cart" class="page hidden">
+            <button data-page="home" class="back-btn mb-4 px-4 py-2 bg-gray-200 rounded-full text-gray-600 hover:bg-gray-300 transition">
+                ← 뒤로가기
+            </button>
+
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">카트 설정</h2>
+
+            <div class="bg-white p-6 rounded-2xl shadow-lg max-w-xs mx-auto flex flex-col items-center space-y-4">
+                <div class="flex items-center justify-between w-full">
+                <span class="text-gray-700 font-medium">자동 모드</span>
+
+                <!-- ✅ 토글 스위치 -->
+                <label class="relative inline-flex items-center cursor-pointer select-none">
+                    <input type="checkbox" id="modeToggle" class="sr-only peer">
+                    <!-- 막대 -->
+                    <div class="w-14 h-8 bg-gray-300 rounded-full peer-checked:bg-blue-500 transition-colors duration-300"></div>
+                    <!-- 동그라미 -->
+                    <div class="absolute left-1 top-1 w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 peer-checked:translate-x-6"></div>
+                </label>
+                </div>
+
+                <p id="modeText" class="text-gray-600 text-sm text-center">
+                현재: <span class="font-semibold">수동 모드</span>
+                </p>
+
+                <!-- 🎮 수동 조종 버튼 (십자형) -->
+                <div id="manualControls" class="hidden flex flex-col items-center justify-center mt-8">
+                <!-- 위 버튼 -->
+                <button 
+                    class="control-btn bg-blue-500 hover:bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-md text-2xl transition">
+                    ▲
+                </button>
+
+                <!-- 가운데 영역 (좌, 중앙, 우) -->
+                <div class="flex items-center justify-center space-x-6 my-3">
+                    <!-- 왼쪽 -->
+                    <button 
+                    class="control-btn bg-blue-500 hover:bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-md text-2xl transition">
+                    ◀
+                    </button>
+
+                    <!-- 중앙 (빈칸 또는 장식용 원형 중앙 버튼) -->
+                    <div class="bg-gray-300 rounded-full w-12 h-12 shadow-inner"></div>
+
+                    <!-- 오른쪽 -->
+                    <button 
+                    class="control-btn bg-blue-500 hover:bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-md text-2xl transition">
+                    ▶
+                    </button>
+                </div>
+
+                <!-- 아래 버튼 -->
+                <button 
+                    class="control-btn bg-blue-500 hover:bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-md text-2xl transition">
+                    ▼
+                </button>
                 </div>
             </div>
+            </div>
+            </div>
+
         </main>
         
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+
+            const toggle = document.getElementById('modeToggle');
+            const modeText = document.getElementById('modeText');
+            const manualControls = document.getElementById('manualControls');
+
+            toggle.addEventListener('change', () => {
+                if (toggle.checked) {
+                modeText.innerHTML = '현재: <span class="font-semibold text-blue-600">자동 모드</span>';
+                manualControls.classList.add('hidden');
+                } else {
+                modeText.innerHTML = '현재: <span class="font-semibold text-gray-800">수동 모드</span>';
+                manualControls.classList.remove('hidden');
+                }
+            });
             // API 정보
             const serviceKey = '3c12807e4d8d42a0ad5b9f266bc209fa';
             const baseUrl = 'https://open.neis.go.kr/hub/mealServiceDietInfo';

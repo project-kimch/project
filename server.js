@@ -83,6 +83,10 @@ app.get('/elec', (req, res) => {
   res.sendFile(path.join(__dirname,'cm', 'elec.html'));
 });
 
+app.get("/cart", (req, res) => {
+  res.sendFile(path.join(__dirname, "cart.html"));
+});
+
 // 급식 정보를 가져오는 API 엔드포인트
 app.get('/api/lunch', async (req, res) => {
     const dateToFetch = req.query.date || getTodayDate();
@@ -137,7 +141,7 @@ app.post('/api/command', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  const token = socket.handshake.qery.token;
+  const token = socket.handshake.query.token;
   if(token !== process.env.PI_AUTH_TOKEN){
     socket.disconnect();
     return;
