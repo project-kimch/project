@@ -1,4 +1,5 @@
 const express = require('express');
+
 const http = require('http')
 const path = require('path');
 const axios = require('axios');
@@ -9,7 +10,8 @@ const { Server } = require('socket.io');
 const app = express();
 const server = http.createServer(app)
 const io = new Server(server, {
-  cors: { origin: "*" }
+  cors: { origin: "*" },
+  methods: ["GET", "POST"]
 })
 app.use(cors());
 
@@ -130,32 +132,36 @@ app.get('/api/lunch', async (req, res) => {
     }
 });
 
-// render 연결하기
-app.use(express.json());
-app.post('/api/command', (req, res) => {
-  const {token, command } = req.body;
-  if(token !== process.env.PI_AUTH_TOKEN)
-    return res.status(401).send("Invalid token");
-  io.to('pi').emit('command', command)
-  res.send({ status: "ok"});
-});
+// render 연결하
+
+const EXPECTED_TOKEN = process.env.PI_AUTH_TOKEN || "changeme";
 
 io.on("connection", (socket) => {
-  // 예전: const token = socket.handshake.query.token;
-  const token = socket.handshake.auth?.token || socket.handshake.query?.token;
-  const id = socket.handshake.auth?.id || socket.handshake.query?.id;
+  const auth = socket.handshake.auth || {};
+  const token = auth.token;
+  const id = auth.id;
 
-  if (token !== process.env.PI_AUTH_TOKEN) {
-    console.log("Auth failed for socket", socket.id);
+  if (token !== EXPECTED_TOKEN) {
+    console.log("❌ Invalid token, disconnecting:", id);
     socket.disconnect(true);
     return;
   }
 
-  console.log("Pi connected:", id, socket.id);
-  // ...
+  console.log(`✅ Raspberry Pi connected: ${id}`);
+
+  socket.on("telemetry", (data) => {
+    console.log(`📡 Telemetry from ${id}:`, data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`🔌 ${id} disconnected`);
+  });
 });
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 10000;
 server.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`✅ Server running on http://localhost:${PORT}`);
 });
+
+
+
