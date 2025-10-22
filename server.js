@@ -6,6 +6,8 @@ const axios = require('axios');
 const cors = require('cors');
 
 const { Server } = require('socket.io');
+const { chmod } = require('fs');
+const { Socket } = require('dgram');
 
 const app = express();
 const server = http.createServer(app)
@@ -132,8 +134,7 @@ app.get('/api/lunch', async (req, res) => {
     }
 });
 
-// render 연결하
-
+// render 연결하기
 const EXPECTED_TOKEN = process.env.PI_AUTH_TOKEN || "changeme";
 
 io.on("connection", (socket) => {
@@ -146,11 +147,17 @@ io.on("connection", (socket) => {
     socket.disconnect(true);
     return;
   }
+  console.log("Client connected : ", socket.id);
+  
 
   console.log(`✅ Raspberry Pi connected: ${id}`);
 
   socket.on("telemetry", (data) => {
     console.log(`📡 Telemetry from ${id}:`, data);
+  });
+  Socket.on("send_command", (cmd) => {
+        console.log('Command from web to ${socket.id} : ', cmd);
+        io.emit("command", cmd)
   });
 
   socket.on("disconnect", () => {

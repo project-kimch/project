@@ -44,6 +44,22 @@
         }
     </style>
 </head>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script>
+  const socket = io("https://your-app.onrender.com", {
+    auth: { token: "웹용 토큰", id: "web-01" },
+    transports: ["websocket"]
+  });
+
+  socket.on("connect", () => {
+    console.log("✅ Connected to server");
+  });
+
+  // 서버에서 라즈베리 응답받기
+  socket.on("command", (data) => {
+    console.log("📡 Command sent to Pi:", data);
+  });
+</script>
 <body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
 
     <!-- App Container -->
@@ -181,7 +197,7 @@
                 <!-- 🎮 수동 조종 버튼 (십자형) -->
                 <div id="manualControls" class="hidden flex flex-col items-center justify-center mt-8">
                 <!-- 위 버튼 -->
-                <button 
+                <button id="btnUp"
                     class="control-btn bg-blue-500 hover:bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-md text-2xl transition">
                     ▲
                 </button>
@@ -189,7 +205,7 @@
                 <!-- 가운데 영역 (좌, 중앙, 우) -->
                 <div class="flex items-center justify-center space-x-6 my-3">
                     <!-- 왼쪽 -->
-                    <button 
+                    <button id="btnLeft"
                     class="control-btn bg-blue-500 hover:bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-md text-2xl transition">
                     ◀
                     </button>
@@ -198,14 +214,14 @@
                     <div class="bg-gray-300 rounded-full w-12 h-12 shadow-inner"></div>
 
                     <!-- 오른쪽 -->
-                    <button 
+                    <button id="btnRight"
                     class="control-btn bg-blue-500 hover:bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-md text-2xl transition">
                     ▶
                     </button>
                 </div>
 
                 <!-- 아래 버튼 -->
-                <button 
+                <button id="btnDown"
                     class="control-btn bg-blue-500 hover:bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-md text-2xl transition">
                     ▼
                 </button>
@@ -220,20 +236,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-
-            const toggle = document.getElementById('modeToggle');
-            const modeText = document.getElementById('modeText');
-            const manualControls = document.getElementById('manualControls');
-
-            toggle.addEventListener('change', () => {
-                if (toggle.checked) {
-                modeText.innerHTML = '현재: <span class="font-semibold text-blue-600">자동 모드</span>';
-                manualControls.classList.add('hidden');
-                } else {
-                modeText.innerHTML = '현재: <span class="font-semibold text-gray-800">수동 모드</span>';
-                manualControls.classList.remove('hidden');
-                }
-            });
             // ✅ 초기 상태 맞추기 (페이지 로드 시)
             if (!toggle.checked) {
                 modeText.innerHTML = '현재: <span class="font-semibold text-gray-800">수동 모드</span>';
@@ -490,6 +492,32 @@
                     const imgSrc = card.getAttribute('data-img');
                     modalImage.src = imgSrc;
                     imageModal.classList.remove('hidden');
+                }
+            });
+
+            function sendCommand(cmd) {
+                socket.emit("send_command", cmd);
+            }
+
+            document.getElementById("btnUp").addEventListener("click", () => sendCommand("forward"));
+            document.getElementById("btnDown").addEventListener("click", () => sendCommand("back"));
+            document.getElementById("btnLeft").addEventListener("click", () => sendCommand("left"));
+            document.getElementById("btnRight").addEventListener("click", () => sendCommand("right"));
+
+            // 자동 모드 토글
+            const modeToggle = document.getElementById("modeToggle");
+            const modeText = document.getElementById("modeText");
+            const manualControls = document.getElementById("manualControls");
+
+            modeToggle.addEventListener("change", () => {
+                if (modeToggle.checked) {
+                modeText.innerHTML = '현재: <span class="font-semibold">자동 모드</span>';
+                manualControls.classList.add("hidden");
+                sendCommand("AUTONOMOUS"); // 서버에 자동 모드 알림
+                } else {
+                modeText.innerHTML = '현재: <span class="font-semibold">수동 모드</span>';
+                manualControls.classList.remove("hidden");
+                sendCommand("MANUAL"); // 서버에 수동 모드 알림
                 }
             });
 
